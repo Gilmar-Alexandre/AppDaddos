@@ -1,10 +1,29 @@
+import streamlit as st
+import streamlit.components.v1 as components
 import os
 import streamlit as st
 from pathlib import Path
 from utils import cria_chain_conversa, PASTA_ARQUIVOS
 
-# Certifique-se de que o diretório PASTA_ARQUIVOS existe
-PASTA_ARQUIVOS.mkdir(parents=True, exist_ok=True)  # Cria o diretório se não existir
+def main():
+    # Configurações de página no estilo Exifa
+    st.set_page_config(
+        page_title="Chatbot", 
+        layout="wide"
+    )
+
+    # Adiciona a animação de partículas
+    with open('Work-Dash\graph.html', 'r') as f:
+        particles_html = f.read()
+    
+    # Incorpora o HTML com as partículas
+    components.html(particles_html, height=400, scrolling=False)
+
+if __name__ == '__main__':
+    main()
+
+
+PASTA_ARQUIVOS.mkdir(parents=True, exist_ok=True)  
 
 def sidebar():
     """Função para a barra lateral onde os usuários podem fazer upload de PDFs."""
@@ -23,18 +42,18 @@ def sidebar():
                 f.write(pdf.read())
     
     # Botão para inicializar ou atualizar o ChatBot
-    label_botao = 'Inicializar AmbiChats' if 'chain' not in st.session_state else 'Atualizar AmbiChats'
+    label_botao = 'Inicializar Chatbot' if 'chain' not in st.session_state else 'Atualizar Chatbot'
     if st.button(label_botao, use_container_width=True):
         if len(list(PASTA_ARQUIVOS.glob('*.pdf'))) == 0:
             st.error('Adicione arquivos .pdf para inicializar o chatbot')
         else:
-            st.success('Inicializando o AmbiChats...')
+            st.success('Inicializando o Chatbot...')
             cria_chain_conversa()
             st.rerun()
 
 def chat_window():
     """Função para a janela de chat onde os usuários interagem com o ChatBot."""
-    st.header('🤖 Bem-vindo a AmbiChats', divider=True)
+    st.header('🤖 Bem-vindo ao Chatbot', divider=True)
 
     if 'chain' not in st.session_state:
         st.error('Faça o upload de PDFs para começar!')
